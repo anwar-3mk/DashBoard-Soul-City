@@ -5,6 +5,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const { getTasks, addTask, updatePlayers, getPlayers } = require('./utils/apiStore');
+const { isBanned } = require('./utils/db');
 
 // 1. إعداد بوت الديسكورد
 const client = new Client({
@@ -100,6 +101,16 @@ app.post('/api/task-completed', authMiddleware, (req, res) => {
     const { taskId } = req.body;
     // يمكن هنا إضافة كود لحذف التاسك أو تسجيله بأنه اكتمل
     res.json({ success: true });
+});
+
+// التحقق من حالة حظر (باند) اللاعب عند انضمامه للعبة
+app.get('/api/check-ban/:username', authMiddleware, (req, res) => {
+    const { username } = req.params;
+    const banInfo = isBanned(username);
+    if (banInfo) {
+        return res.json({ banned: true, reason: banInfo.reason });
+    }
+    return res.json({ banned: false });
 });
 
 const PORT = process.env.PORT || 3000;
