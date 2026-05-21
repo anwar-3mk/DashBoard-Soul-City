@@ -1,5 +1,19 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits } = require('discord.js');
-const { getLogChannelId, getAdminRoleId } = require('../utils/db');
+let db;
+try {
+    db = require('../utils/db');
+} catch (e) {
+    try {
+        db = require('../Utils/db');
+    } catch (err) {
+        try {
+            db = require('../utils/Db');
+        } catch (err2) {
+            db = require('../Utils/Db');
+        }
+    }
+}
+const { getLogChannelId, getAdminRoleId } = db;
 
 module.exports = {
     data: new SlashCommandBuilder()

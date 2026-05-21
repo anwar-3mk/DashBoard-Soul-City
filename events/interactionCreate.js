@@ -11,6 +11,25 @@ const {
     PermissionFlagsBits
 } = require('discord.js');
 const { getPlayers, addTask } = require('../utils/apiStore');
+let db;
+try {
+    db = require('../utils/db');
+} catch (e) {
+    try {
+        db = require('../Utils/db');
+    } catch (err) {
+        try {
+            db = require('../utils/Db');
+        } catch (err2) {
+            try {
+                db = require('../Utils/Db');
+            } catch (err3) {
+                console.error("CRITICAL: Could not find db.js module in any casing:", err3);
+                throw e; // إعادة رمي الخطأ الأصلي
+            }
+        }
+    }
+}
 const { 
     getLogChannelId, 
     setLogChannelId, 
@@ -21,7 +40,7 @@ const {
     removeBan, 
     addKick,
     getBans 
-} = require('../utils/db');
+} = db;
 const axios = require('axios');
 
 // دالة مساعدة لإرسال السجلات بروم اللوق المحدد
